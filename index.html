@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>JP · Pilotage OFF</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0f14;--c1:#161820;--c2:#1e2028;--bd:#2a2d38;--bd2:#363a4a;
+  --tx:#e8eaf0;--t2:#7a7f94;--t3:#4a4f62;
+  --ac:#5b7fff;--ac2:#7b9aff;--gr:#34d399;--rd:#f87171;--am:#fbbf24;--pu:#a78bfa;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --r:10px;--r2:14px;--r3:18px;
+  --shadow:0 4px 24px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font);background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden}
+input,select,textarea,button{font-family:var(--font);outline:none}
+input,select,textarea{width:100%;padding:11px 14px;background:var(--c2);border:1.5px solid var(--bd);border-radius:var(--r);color:var(--tx);font-size:14px;transition:border-color .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--ac)}
+label{font-size:12px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px}
+.fi{margin-bottom:14px}
+.fr{display:flex;gap:10px;margin-bottom:14px}.fr>*{flex:1}
+button{cursor:pointer}
+.btn{padding:10px 18px;border-radius:var(--r);border:none;font-size:14px;font-weight:600;transition:all .15s}
+.btn-p{background:var(--ac);color:#fff}.btn-p:active{background:var(--ac2)}
+.btn-g{background:var(--c2);color:var(--tx);border:1.5px solid var(--bd)}.btn-g:active{background:var(--bd)}
+.btn-d{background:rgba(248,113,113,.1);color:var(--rd);border:1.5px solid rgba(248,113,113,.2)}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn-xs{padding:5px 10px;font-size:12px}
+.wf{width:100%}
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700}
+.b-ac{background:rgba(91,127,255,.15);color:var(--ac2)}
+.b-gr{background:rgba(52,211,153,.15);color:var(--gr)}
+.b-rd{background:rgba(248,113,113,.15);color:var(--rd)}
+.b-am{background:rgba(251,191,36,.15);color:var(--am)}
+.b-pu{background:rgba(167,139,250,.15);color:var(--pu)}
+
+/* LOGIN */
+#sl{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:24px;background:var(--bg)}
+.lcard{width:100%;max-width:400px;background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r3);padding:32px 24px;box-shadow:var(--shadow)}
+.ltitle{font-size:28px;font-weight:800;text-align:center;margin-bottom:4px;letter-spacing:-1px}
+.lsub{font-size:13px;color:var(--t2);text-align:center;margin-bottom:28px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px}
+.mbtn{background:var(--c2);border:1.5px solid var(--bd);border-radius:var(--r2);padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:5px;transition:all .15s;color:var(--tx)}
+.mbtn.sel{border-color:var(--ac);background:rgba(91,127,255,.1)}
+.mbtn:active{transform:scale(.97)}
+.me{font-size:24px}
+.mn{font-size:13px;font-weight:700}
+.mr{font-size:11px;color:var(--t2)}
+.lerr{color:var(--rd);font-size:13px;text-align:center;margin-top:8px;min-height:20px}
+.pin-wrap{display:flex;gap:8px;margin-bottom:16px}
+#pin{flex:1;text-align:center;font-size:20px;font-weight:700;letter-spacing:8px}
+
+/* APP */
+#sa{display:none;flex-direction:column;min-height:100vh}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--c1);border-bottom:1.5px solid var(--bd);position:sticky;top:0;z-index:100}
+.tlogo{font-size:15px;font-weight:800;letter-spacing:-0.5px}
+.tuser{font-size:13px;font-weight:600;color:var(--t2)}
+.tquit{background:none;border:none;color:var(--t2);font-size:20px;padding:4px}
+.pages{flex:1;overflow-y:auto;padding-bottom:80px}
+.page{display:none;padding:16px}
+.page.act{display:block}
+.nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:var(--c1);border-top:1.5px solid var(--bd);z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px;border:none;background:none;color:var(--t2);font-size:10px;font-weight:600;gap:3px;transition:color .15s}
+.ni.act{color:var(--ac)}
+.ni-icon{font-size:18px}
+
+/* CARDS */
+.card{background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);padding:14px}
+.card+.card{margin-top:10px}
+.slbl{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.8px;margin:20px 0 10px}
+.slbl:first-child{margin-top:0}
+.ptitle{font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:16px}
+.ptitle span{color:var(--ac)}
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.ph .ptitle{margin-bottom:0}
+
+/* KPIs */
+.kgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.kpi{background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);padding:14px}
+.kval{font-size:26px;font-weight:800;letter-spacing:-1px}
+.klbl{font-size:11px;color:var(--t2);font-weight:600;margin-top:2px}
+.ksub{font-size:11px;margin-top:3px;font-weight:600}
+
+/* WEEK CAL */
+.wkcal{display:flex;flex-direction:column;gap:6px}
+.wkday{background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);overflow:hidden}
+.wkday.open .wkday-body{display:block}
+.wkday-hd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer}
+.wkday-hd.today{background:rgba(91,127,255,.06)}
+.wkday-name{font-size:14px;font-weight:700}
+.wkchev{font-size:10px;color:var(--t2);transition:transform .2s}
+.wkday.open .wkchev{transform:rotate(90deg)}
+.wkday-body{display:none;padding:0 14px 12px}
+.trow{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)}
+.trow:last-child{border-bottom:none}
+.tck{width:20px;height:20px;border-radius:50%;border:2px solid var(--bd2);flex-shrink:0;cursor:pointer;transition:all .2s}
+.tck.done{background:var(--gr);border-color:var(--gr)}
+.ttx{flex:1;font-size:13px;font-weight:500}
+.ttx.done{text-decoration:line-through;color:var(--t2)}
+.tcat{font-size:10px;color:var(--t2);font-weight:600;background:var(--c2);padding:2px 7px;border-radius:20px}
+
+/* TÂCHES */
+.wkcal-tasks{display:flex;flex-direction:column;gap:6px}
+.dblock{background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);overflow:hidden}
+.dblock.open .dbody{display:block}
+.dhd{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer}
+.dhd.today{background:rgba(91,127,255,.06)}
+.dtitle{font-size:14px;font-weight:700}
+.dmeta{font-size:11px;color:var(--t2);margin-top:1px}
+.dchev{font-size:10px;color:var(--t2);transition:transform .2s}
+.dblock.open .dchev{transform:rotate(90deg)}
+.dbody{display:none;padding:0 14px 12px}
+.wnav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);padding:10px 14px}
+.wlbl{font-size:13px;font-weight:700}
+.ttabs{display:flex;gap:6px;margin-bottom:14px}
+.ttab{flex:1;padding:9px;border-radius:var(--r);border:1.5px solid var(--bd);background:none;color:var(--t2);font-size:13px;font-weight:600}
+.ttab.act{border-color:var(--ac);background:rgba(91,127,255,.1);color:var(--ac)}
+
+/* PROJETS */
+.pcard{background:var(--c1);border:1.5px solid var(--bd);border-left:3px solid var(--ac);border-radius:var(--r2);margin-bottom:10px;overflow:hidden}
+.pcard.open .pbody{display:block}
+.pchd{display:flex;align-items:center;justify-content:space-between;padding:14px;cursor:pointer;gap:10px}
+.pinf{flex:1;min-width:0}
+.pnm{font-size:15px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pmeta{font-size:11px;color:var(--t2);margin-top:2px}
+.pchev{font-size:10px;color:var(--t2);flex-shrink:0;transition:transform .2s}
+.pcard.open .pchev{transform:rotate(90deg)}
+.pbody{display:none;padding:0 14px 14px}
+.miss{background:var(--c2);border-radius:var(--r);padding:12px;margin-bottom:6px;border:1px solid var(--bd)}
+.miss.act-m{border-color:rgba(91,127,255,.3)}
+.miss.done-m{opacity:.5}
+.miss-top{display:flex;align-items:center;gap:10px}
+.mnum{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.mn-act{background:rgba(91,127,255,.2);color:var(--ac)}
+.mn-done{background:rgba(52,211,153,.2);color:var(--gr)}
+.mn-lk{background:var(--bd);color:var(--t2)}
+.mtx{flex:1;font-size:13px;font-weight:500}
+.mctrl{display:flex;flex-wrap:wrap;gap:6px;padding-left:36px;margin-top:8px}
+.msel{font-size:12px;padding:5px 10px;border-radius:20px;border:none;font-family:var(--font);font-weight:600;cursor:pointer}
+.mdi{font-size:12px;padding:5px 10px;border-radius:20px;border:1px solid var(--bd);background:var(--c1);color:var(--tx);font-family:var(--font);width:auto}
+.mni{font-size:13px;padding:8px 12px;background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r);color:var(--tx);width:100%;resize:none;min-height:60px;margin-top:4px;line-height:1.5}
+.mbl{font-size:12px;color:var(--t2);width:100%}
+.mbl select{font-size:12px;padding:4px 8px;border-radius:8px;border:1px solid var(--bd);background:var(--c2);color:var(--tx);font-family:var(--font)}
+.bdone{background:rgba(52,211,153,.15);color:var(--gr);border:1px solid rgba(52,211,153,.3);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;font-family:var(--font)}
+.ctrow{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border-radius:8px;border:1px solid var(--bd);margin-bottom:4px;margin-left:36px}
+.ctnm{flex:1;font-size:12px;font-weight:600}
+.ctsel{font-size:11px;padding:3px 8px;border-radius:12px;border:none;font-family:var(--font);font-weight:600}
+.prio-sep{font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.8px;padding:8px 0 4px;margin-top:4px}
+
+/* CRM */
+.partcard{background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);padding:14px;margin-bottom:8px}
+.pname{font-size:15px;font-weight:700}
+.pmeta2{font-size:12px;color:var(--t2);margin-top:3px}
+.pipe-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+.crmflt{display:flex;overflow-x:auto;gap:6px;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+.crmflt::-webkit-scrollbar{display:none}
+.fchip{padding:7px 14px;border-radius:20px;border:1.5px solid var(--bd);background:none;color:var(--t2);font-size:12px;font-weight:600;white-space:nowrap}
+.fchip.act{border-color:var(--ac);background:rgba(91,127,255,.1);color:var(--ac)}
+
+/* BOTTOM SHEET */
+#sbg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;backdrop-filter:blur(2px)}
+#sbg.open{display:block}
+#crmsheet{position:fixed;bottom:0;left:0;right:0;background:var(--c1);border-radius:var(--r3) var(--r3) 0 0;border-top:1.5px solid var(--bd);z-index:201;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+#crmsheet.open{transform:translateY(0)}
+#sh-name{font-size:20px;font-weight:800;letter-spacing:-.5px}
+#sh-sub{font-size:12px;color:var(--t2);margin-top:3px}
+.shhandle{width:36px;height:4px;background:var(--bd2);border-radius:2px;margin:12px auto 16px}
+.shbody{padding:0 16px 32px}
+
+/* COM */
+.pubcard{background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);padding:14px;margin-bottom:8px}
+.pubtop{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.plats{display:flex;gap:4px;align-items:center}
+.pubinf{flex:1;min-width:0}
+.pubnm{font-size:14px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pubmt{font-size:11px;color:var(--t2);margin-top:2px}
+.pubedt{background:none;border:none;font-size:16px;padding:4px;color:var(--t2)}
+.pubsl{font-size:12px;padding:5px 10px;border-radius:20px;border:none;font-family:var(--font);font-weight:600;background:var(--c2);color:var(--tx);width:100%}
+.daycom{background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);margin-bottom:6px;overflow:hidden}
+.dchead{display:flex;align-items:center;justify-content:space-between;padding:10px 14px}
+.dclbl{font-size:13px;font-weight:700}
+.objcard{background:var(--c1);border:1.5px solid var(--bd);border-radius:var(--r2);padding:14px;margin-bottom:14px}
+.objpk{margin-bottom:10px}.objpk:last-child{margin-bottom:0}
+.objpkhd{display:flex;justify-content:space-between;margin-bottom:5px;font-size:13px;font-weight:600}
+.prog{height:6px;background:var(--c2);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .4s}
+
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:flex-end;backdrop-filter:blur(3px)}
+.mo.open{display:flex}
+.mbox{background:var(--c1);border-radius:var(--r3) var(--r3) 0 0;border-top:1.5px solid var(--bd);width:100%;max-height:90vh;overflow-y:auto}
+.mhandle{width:36px;height:4px;background:var(--bd2);border-radius:2px;margin:12px auto 0}
+.mhd{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px}
+.mtitle{font-size:17px;font-weight:800}
+.mcbtn{background:var(--c2);border:none;width:28px;height:28px;border-radius:50%;color:var(--t2);font-size:16px;display:flex;align-items:center;justify-content:center}
+.mbdy{padding:0 16px 8px}
+.mft{padding:12px 16px 32px;display:flex;gap:8px}
+.mft .btn{flex:1}
+
+/* TOAST */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:999;pointer-events:none}
+.tst{background:var(--c2);border:1.5px solid var(--bd);color:var(--tx);padding:10px 18px;border-radius:30px;font-size:13px;font-weight:600;white-space:nowrap;box-shadow:var(--shadow);animation:tin .3s,tout .3s 2s forwards}
+@keyframes tin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tout{to{opacity:0}}
+
+/* UTILS */
+.sep{height:1px;background:var(--bd);margin:16px 0}
+.empty{text-align:center;padding:40px 20px;color:var(--t2);font-size:14px}
+.platchks-new{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.plat-btn{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:var(--r);border:2px solid var(--bd);background:none;color:var(--t2);font-family:var(--font);font-size:13px;font-weight:600;transition:all .15s;width:100%}
+.plat-btn.on{border-color:var(--ac);background:rgba(91,127,255,.1);color:var(--ac)}
+.who-btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.who-btn{display:flex;align-items:center;gap:6px;padding:8px 12px;border-radius:var(--r);border:2px solid var(--bd);background:none;color:var(--t2);font-family:var(--font);font-size:13px;font-weight:600;transition:all .15s}
+.who-btn.on{border-color:var(--ac);background:rgba(91,127,255,.1);color:var(--ac)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="sl">
+  <div class="lcard">
+    <div class="ltitle">🌿 JP · OFF</div>
+    <div class="lsub">Jungle Park — Pilotage hors ouverture</div>
+    <div class="mgrid" id="mgrid"></div>
+    <div class="fi">
+      <label>Code PIN</label>
+      <div class="pin-wrap">
+        <input type="password" id="pin" maxlength="4" inputmode="numeric" placeholder="····">
+        <button class="btn btn-p" onclick="doLogin()">→</button>
+      </div>
+    </div>
+    <div class="lerr" id="lerr"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="sa">
+  <div class="topbar">
+    <div class="tlogo">🌿 JP · OFF</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="tuser" id="tu"></div>
+      <button class="tquit" onclick="doLogout()">⏻</button>
+    </div>
+  </div>
+  <div class="pages">
+    <div class="page act" id="page-home"></div>
+    <div class="page" id="page-tasks"></div>
+    <div class="page" id="page-crm"></div>
+    <div class="page" id="page-com"></div>
+    <div class="page" id="page-team"></div>
+  </div>
+  <nav class="nav">
+    <button class="ni act" onclick="goPage('home',this)"><span class="ni-icon">⚡</span>Accueil</button>
+    <button class="ni" onclick="goPage('tasks',this)"><span class="ni-icon">✅</span>Tâches</button>
+    <button class="ni" onclick="goPage('crm',this)"><span class="ni-icon">🤝</span>CRM</button>
+    <button class="ni" onclick="goPage('com',this)"><span class="ni-icon">📣</span>Com</button>
+    <button class="ni" onclick="goPage('team',this)"><span class="ni-icon">👥</span>Équipe</button>
+  </nav>
+</div>
+
+<!-- MODAL TÂCHE -->
+<div class="mo" id="mo-task">
+  <div class="mbox"><div class="mhandle"></div>
+    <div class="mhd"><div class="mtitle" id="mt-title">Nouvelle tâche</div><button class="mcbtn" onclick="cm('mo-task')">×</button></div>
+    <div class="mbdy">
+      <input type="hidden" id="t-eid">
+      <input type="hidden" id="t-type" value="rec">
+      <div class="fi"><label>Titre *</label><input type="text" id="t-name" placeholder="ex: Vérifier les réservations"></div>
+      <div class="fi"><label>Type</label>
+        <div style="display:flex;gap:8px">
+          <button id="t-type-rec" onclick="setTaskType('rec')" class="btn btn-g" style="flex:1">🔄 Récurrente</button>
+          <button id="t-type-exc" onclick="setTaskType('exc')" class="btn btn-g" style="flex:1">📌 Exceptionnelle</button>
+        </div>
+      </div>
+      <div class="fi"><label>Assignée à</label><div class="who-btns" id="t-who-btns"></div><input type="hidden" id="t-who"></div>
+      <div id="t-rec-fields">
+        <div class="fr">
+          <div><label>Jour</label><select id="t-day"><option value="0">Lundi</option><option value="1">Mardi</option><option value="2">Mercredi</option><option value="3">Jeudi</option><option value="4">Vendredi</option></select></div>
+          <div><label>Fréquence</label><select id="t-freq"><option value="hebdo">Chaque semaine</option><option value="bi">1 sem. / 2</option><option value="m1">1re sem. du mois</option><option value="m2">2e sem. du mois</option><option value="m3">3e sem. du mois</option><option value="m4">4e sem. du mois</option></select></div>
+        </div>
+      </div>
+      <div id="t-exc-fields" style="display:none">
+        <div class="fi"><label>Date *</label><input type="date" id="t-date-exc"></div>
+      </div>
+      <div class="fr">
+        <div><label>Catégorie</label><select id="t-cat"><option value="rh">RH</option><option value="com">Com</option><option value="compta">Compta</option><option value="batiment">Bâtiment</option><option value="demarchage">Démarchage</option><option value="autre">Autre</option></select></div>
+        <div><label>Note</label><input type="text" id="t-note" placeholder="Optionnel"></div>
+      </div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="cm('mo-task')">Annuler</button><button class="btn btn-p" onclick="saveTask()">Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- MODAL PROJET -->
+<div class="mo" id="mo-proj">
+  <div class="mbox"><div class="mhandle"></div>
+    <div class="mhd"><div class="mtitle" id="mp-title">Nouveau projet</div><button class="mcbtn" onclick="cm('mo-proj')">×</button></div>
+    <div class="mbdy">
+      <div class="fi"><label>Nom *</label><input type="text" id="p-name" placeholder="ex: Démarchage CE Été 2025"></div>
+      <div class="fr">
+        <div><label>Assigné à</label><select id="p-who"></select></div>
+        <div><label>Priorité</label><select id="p-prio"><option value="critique">🔴 Critique</option><option value="haute">🟠 Haute</option><option value="normale" selected>🟡 Normale</option><option value="basse">🟢 Basse</option></select></div>
+      </div>
+      <div class="fr">
+        <div><label>Catégorie</label><select id="p-cat"><option value="demarchage">Démarchage</option><option value="com">Com</option><option value="rh">RH</option><option value="batiment">Bâtiment</option><option value="dev">Développement</option><option value="autre">Autre</option></select></div>
+        <div><label>Échéance</label><input type="date" id="p-dl"></div>
+      </div>
+      <div class="fr">
+        <div><label>Budget (€)</label><input type="number" id="p-bgt" placeholder="0"></div>
+        <div><label>Heures est.</label><input type="number" id="p-hrs" placeholder="0"></div>
+      </div>
+      <div class="fi"><label>Missions</label>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <button class="btn btn-g btn-sm" onclick="addM('simple')" style="flex:1">✅ Simple</button>
+          <button class="btn btn-g btn-sm" onclick="addM('crm')" style="flex:1">📞 CRM</button>
+        </div>
+        <div id="mlist"></div>
+      </div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="cm('mo-proj')">Annuler</button><button class="btn btn-p" onclick="saveProj()">Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- MODAL CONTACT -->
+<div class="mo" id="mo-part">
+  <div class="mbox"><div class="mhandle"></div>
+    <div class="mhd"><div class="mtitle" id="mpart-t">Nouveau contact</div><button class="mcbtn" onclick="cm('mo-part')">×</button></div>
+    <div class="mbdy">
+      <input type="hidden" id="cp-id">
+      <div class="fi"><label>Organisation *</label><input type="text" id="cp-name"></div>
+      <div class="fr">
+        <div><label>Catégorie</label><select id="cp-cat"><option>Sou des Écoles</option><option>CE / Comité</option><option>Club Sportif</option><option>Hôtel / Camping</option><option>Crèche / IME</option><option>Partenariat</option><option>Autre</option></select></div>
+        <div><label>Pipeline</label><select id="cp-pipe"><option value="prospect">Prospect</option><option value="contacte">Contacté</option><option value="attente">En attente</option><option value="actif">Actif ✓</option><option value="inactif">Inactif</option></select></div>
+      </div>
+      <div class="fr">
+        <div><label>Ville</label><input type="text" id="cp-ville"></div>
+        <div><label>Responsable</label><select id="cp-resp"></select></div>
+      </div>
+      <div class="fr">
+        <div><label>Contact</label><input type="text" id="cp-contact"></div>
+        <div><label>Téléphone</label><input type="tel" id="cp-tel"></div>
+      </div>
+      <div class="fi"><label>Email</label><input type="email" id="cp-email"></div>
+      <div class="fr">
+        <div><label>Dernier contact</label><input type="date" id="cp-last"></div>
+        <div><label>Prochain</label><input type="date" id="cp-next"></div>
+      </div>
+      <div class="fi"><label>Notes</label><textarea id="cp-notes" rows="3"></textarea></div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="cm('mo-part')">Annuler</button><button class="btn btn-p" onclick="savePart()">Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- MODAL PUBLICATION -->
+<div class="mo" id="mo-pub">
+  <div class="mbox"><div class="mhandle"></div>
+    <div class="mhd"><div class="mtitle" id="mpub-t">Nouvelle publication</div><button class="mcbtn" onclick="cm('mo-pub')">×</button></div>
+    <div class="mbdy">
+      <div class="fi"><label>Titre *</label><input type="text" id="pub-name"></div>
+      <div class="fr">
+        <div><label>Parc</label><select id="pub-park"><option value="jungle">🌿 Jungle</option><option value="sweety">🍭 Sweety</option><option value="both">Les deux</option></select></div>
+        <div><label>Date</label><input type="date" id="pub-date"></div>
+      </div>
+      <div class="fr">
+        <div><label>Responsable</label><select id="pub-resp"></select></div>
+        <div><label>Statut</label><select id="pub-st"><option value="idee">💡 Idée</option><option value="creation">🎨 Création</option><option value="pret">✅ Prêt</option><option value="programme">📅 Programmé</option><option value="publie">🚀 Publié</option></select></div>
+      </div>
+      <div class="fi"><label>Plateformes</label>
+        <div class="platchks-new">
+          <button class="plat-btn" id="plat-fb" onclick="togPlat('fb')">📘 Facebook</button>
+          <button class="plat-btn" id="plat-ig" onclick="togPlat('ig')">📸 Instagram</button>
+          <button class="plat-btn" id="plat-tk" onclick="togPlat('tk')">🎵 TikTok</button>
+          <button class="plat-btn" id="plat-gb" onclick="togPlat('gb')">🔍 Google</button>
+        </div>
+        <input type="hidden" id="pub-plats" value="[]">
+      </div>
+      <div class="fi"><label>Description</label><textarea id="pub-desc" rows="2"></textarea></div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="cm('mo-pub')">Annuler</button><button class="btn btn-p" onclick="savePub()">Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- MODAL INTERACTION CRM -->
+<div class="mo" id="mo-inter">
+  <div class="mbox"><div class="mhandle"></div>
+    <div class="mhd"><div class="mtitle">Nouvelle interaction</div><button class="mcbtn" onclick="cm('mo-inter')">×</button></div>
+    <div class="mbdy">
+      <input type="hidden" id="inter-pid">
+      <div class="fi"><label>Type</label><select id="inter-type"><option value="tombola_donnee">🎟 Tombola donnée</option><option value="tombola_retour">🎫 Tombola retournée</option><option value="privatisation">🎉 Privatisation</option><option value="location">📦 Location structure</option><option value="visite_groupe">👥 Visite groupe</option><option value="autre">📌 Autre</option></select></div>
+      <div class="fr">
+        <div><label>Date *</label><input type="date" id="inter-date"></div>
+        <div><label>Montant / Valeur</label><input type="text" id="inter-montant" placeholder="ex: 150€"></div>
+      </div>
+      <div class="fi"><label>Notes</label><textarea id="inter-notes" rows="2"></textarea></div>
+    </div>
+    <div class="mft"><button class="btn btn-g" onclick="cm('mo-inter')">Annuler</button><button class="btn btn-p" onclick="saveInter()">Enregistrer</button></div>
+  </div>
+</div>
+
+<!-- CRM SHEET -->
+<div id="sbg" onclick="closeSheet()"></div>
+<div id="crmsheet">
+  <div class="shhandle"></div>
+  <div style="padding:0 16px 8px;display:flex;align-items:center;justify-content:space-between">
+    <div><div id="sh-name"></div><div id="sh-sub"></div></div>
+    <button class="btn btn-g btn-sm" onclick="closeSheet()">✕</button>
+  </div>
+  <div class="shbody" id="sh-body"></div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ═══ SUPABASE ═══
+const SUPA_URL='https://eyafmqvgxlaqskbwcrdq.supabase.co';
+const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV5YWZtcXZneGxhcXNrYndjcmRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY0OTM1MzAsImV4cCI6MjA5MjA2OTUzMH0.t-as7f_AWwuytNzxzpXWpaZ9kK49bxn7f5TC1IOTWx8';
+const HDR={
+  'Content-Type':'application/json',
+  'apikey':SUPA_KEY,
+  'Authorization':'Bearer '+SUPA_KEY
+};
+
+async function dbGet(table,query){
+  try{
+    const r=await fetch(SUPA_URL+'/rest/v1/'+table+(query||''),{headers:HDR});
+    if(!r.ok)return[];
+    const t=await r.text();
+    return t?JSON.parse(t):[];
+  }catch(e){return[];}
+}
+
+async function dbUpsert(table,data){
+  try{
+    const r=await fetch(SUPA_URL+'/rest/v1/'+table+'?on_conflict=id',{
+      method:'POST',
+      headers:{...HDR,'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(data)
+    });
+    if(!r.ok){const t=await r.text();console.error(table,r.status,t);toast('❌ '+r.status+' '+t.slice(0,50));}
+    return r.ok;
+  }catch(e){toast('❌ Réseau: '+e.message);return false;}
+}
+
+async function dbDelete(table,id){
+  try{
+    await fetch(SUPA_URL+'/rest/v1/'+table+'?id=eq.'+id,{method:'DELETE',headers:{...HDR,'Prefer':'return=minimal'}});
+  }catch(e){}
+}
+
+// ═══ STATE ═══
+const S={
+  user:null,cm:null,wk:0,comWk:0,
+  members:[
+    {id:'herve',prenom:'Hervé',pin:'0000',role:'Gérant',emoji:'👨‍💼',color:'#5b7fff'},
+    {id:'constance',prenom:'Constance',pin:'1111',role:'RH & Com',emoji:'👩‍💼',color:'#34d399'},
+    {id:'ines',prenom:'Inès',pin:'2222',role:'Polyvalente',emoji:'🧑‍💼',color:'#fbbf24'},
+    {id:'ambre',prenom:'Ambre',pin:'3333',role:'Alternante',emoji:'👩‍🎓',color:'#a78bfa'}
+  ],
+  tasks:[],projects:[],partners:[],publications:[],
+  taskStates:{},
+  ttab:'semaine',comView:'semaine',comPark:'all',
+  crmFilter:'all',sheetId:null,projEditId:null,comEditId:null,partEditId:null,
+};
+const DF=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+const PKI={jungle:'🌿',sweety:'🍭',both:'🌿🍭'};
+const PLI={fb:'📘',ig:'📸',tk:'🎵',gb:'🔍'};
+const COMST={idee:{l:'💡 Idée',c:'#7a7f94'},creation:{l:'🎨 Création',c:'#5b7fff'},pret:{l:'✅ Prêt',c:'#34d399'},programme:{l:'📅 Programmé',c:'#fbbf24'},publie:{l:'🚀 Publié',c:'#34d399'}};
+const PIPE={prospect:{l:'Prospect',c:'#7a7f94'},contacte:{l:'Contacté',c:'#5b7fff'},attente:{l:'En attente',c:'#fbbf24'},actif:{l:'Actif ✓',c:'#34d399'},inactif:{l:'Inactif',c:'#f87171'}};
+const MST={en_cours:{l:'En cours',c:'#5b7fff',bg:'rgba(91,127,255,.15)'},bloque:{l:'🔴 Bloqué',c:'#f87171',bg:'rgba(248,113,113,.15)'},fait:{l:'✓ Fait',c:'#34d399',bg:'rgba(52,211,153,.15)'}};
+const PR={critique:{c:'#f87171',l:'🔴'},haute:{c:'#fbbf24',l:'🟠'},normale:{c:'#5b7fff',l:'🟡'},basse:{c:'#34d399',l:'🟢'}};
+const ITYPE={tombola_donnee:{l:'🎟 Tombola donnée',c:'#a78bfa'},tombola_retour:{l:'🎫 Tombola retournée',c:'#34d399'},privatisation:{l:'🎉 Privatisation',c:'#fbbf24'},location:{l:'📦 Location structure',c:'#5b7fff'},visite_groupe:{l:'👥 Visite groupe',c:'#f87171'},autre:{l:'📌 Autre',c:'#7a7f94'}};
+
+function g(id){return document.getElementById(id);}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+function td(){return new Date().toISOString().slice(0,10);}
+function fmt(d){return d.getDate()+'/'+(d.getMonth()+1);}
+function toast(msg,dur=2500){const el=g('toast');el.innerHTML=`<div class="tst">${msg}</div>`;setTimeout(()=>el.innerHTML='',dur);}
+function om(id){g(id).classList.add('open');}
+function cm(id){g(id).classList.remove('open');}
+function wkd(off){
+  const n=new Date(),d=n.getDay(),m=new Date(n);
+  m.setDate(n.getDate()-(d===0?6:d-1)+off*7);
+  return Array.from({length:7},(_,i)=>{const x=new Date(m);x.setDate(m.getDate()+i);return x;});
+}
+function getWkNum(d){return Math.floor((d-new Date(d.getFullYear(),0,1))/604800000);}
+
+// ═══ LOAD / SAVE ═══
+async function dbLoad(){
+  const [tasks,projects,partners,publications]=await Promise.all([
+    dbGet('off_taches','?order=created_at'),
+    dbGet('off_projets','?order=created_at'),
+    dbGet('off_partenaires','?order=name'),
+    dbGet('off_publications','?order=date.desc')
+  ]);
+  S.tasks=tasks.map(t=>{
+    let who=t.who||'herve';
+    try{if(typeof who==='string'&&who.startsWith('['))who=JSON.parse(who);}catch(e){}
+    if(!Array.isArray(who))who=[who];
+    return{...t,who,type:t.type||'rec',dateExc:t.date_exc||null,weekRef:t.week_ref||0};
+  });
+  S.projects=projects.map(p=>({...p,heuresEst:p.heures_est||0,heuresReal:p.heures_real||0,missions:p.missions||[],depenses:p.depenses||[]}));
+  S.partners=partners.map(p=>({...p,crmProjects:p.crm_projects||[],interactions:p.interactions||[]}));
+  S.publications=publications.map(p=>({...p,desc:p.description||''}));
+  const saved=localStorage.getItem('jp_ts');
+  if(saved)try{S.taskStates=JSON.parse(saved);}catch(e){}
+}
+
+async function saveTask_db(t){
+  const who=Array.isArray(t.who)?JSON.stringify(t.who):(t.who||'herve');
+  return dbUpsert('off_taches',{id:t.id,name:t.name,who,day:t.day||'',freq:t.freq||'hebdo',cat:t.cat||'autre',note:t.note||'',type:t.type||'rec',date_exc:t.dateExc||null,week_ref:t.weekRef||0});
+}
+async function saveProj_db(p){
+  return dbUpsert('off_projets',{id:p.id,name:p.name,who:p.who||'herve',cat:p.cat||'autre',priority:p.priority||'normale',deadline:p.deadline||null,budget:p.budget||0,heures_est:p.heuresEst||0,heures_real:p.heuresReal||0,missions:p.missions||[],depenses:p.depenses||[]});
+}
+async function savePart_db(p){
+  return dbUpsert('off_partenaires',{id:p.id,name:p.name,cat:p.cat||'',ville:p.ville||'',pipeline:p.pipeline||'prospect',contact:p.contact||'',tel:p.tel||'',email:p.email||'',notes:p.notes||'',lastcontact:p.lastcontact||null,nextcontact:p.nextcontact||null,resp:p.resp||'herve',crm_projects:p.crmProjects||[],interactions:p.interactions||[]});
+}
+async function savePub_db(p){
+  return dbUpsert('off_publications',{id:p.id,name:p.name,date:p.date||null,park:p.park||'jungle',resp:p.resp||'',status:p.status||'idee',platforms:p.platforms||[],description:p.desc||'',vues:p.vues||'',likes:p.likes||'',comments:p.comments||'',shares:p.shares||''});
+}
+
+// ═══ LOGIN ═══
+function renderLogin(){
+  g('mgrid').innerHTML=S.members.map(m=>`<button class="mbtn${S.user===m.id?' sel':''}" onclick="selM('${m.id}')"><span class="me">${m.emoji}</span><span class="mn">${m.prenom}</span><span class="mr">${m.role}</span></button>`).join('');
+}
+function selM(id){S.user=id;g('lerr').textContent='';g('pin').value='';g('pin').focus();renderLogin();}
+function doLogin(){
+  if(!S.user){g('lerr').textContent='Sélectionne un membre';return;}
+  const m=S.members.find(x=>x.id===S.user);
+  if(!m||m.pin!==g('pin').value){g('lerr').textContent='PIN incorrect';return;}
+  g('sl').style.display='none';g('sa').style.display='flex';
+  g('tu').textContent=m.emoji+' '+m.prenom;S.cm=S.user;updWeek();
+  g('page-home').innerHTML='<div class="empty">⏳ Chargement...</div>';
+  dbLoad().then(()=>renderAll());
+}
+g('pin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+function doLogout(){S.user=null;g('pin').value='';g('sl').style.display='flex';g('sa').style.display='none';renderLogin();}
+function updWeek(){const d=wkd(S.wk);g('tw')&&(g('tw').textContent='Sem. '+fmt(d[0])+' – '+fmt(d[6]));}
+
+// ═══ NAV ═══
+function goPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('act'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('act'));
+  g('page-'+name).classList.add('act');btn.classList.add('act');
+  const renders={home:renderHome,tasks:renderTasks,crm:renderCRM,com:renderCom,team:renderTeam};
+  renders[name]&&renders[name]();
+}
+function renderAll(){renderHome();renderTasks();renderCRM();renderCom();renderTeam();}
+
+// ═══ TASK VISIBLE ═══
+function taskVisible(t,dayIdx,dateStr,weekNum){
+  if(t.type==='exc')return(t.dateExc||'')===dateStr;
+  if(parseInt(t.day)!==dayIdx)return false;
+  const f=t.freq||'hebdo';
+  if(f==='hebdo')return true;
+  if(f==='bi'){const ref=t.weekRef||0;return(weekNum-ref)%2===0;}
+  const d=new Date(dateStr),wom=Math.ceil(d.getDate()/7);
+  if(f==='m1')return wom===1;if(f==='m2')return wom===2;
+  if(f==='m3')return wom===3;if(f==='m4')return wom===4;
+  return true;
+}
+
+// ═══ HOME ═══
+function renderHome(){
+  const el=g('page-home');if(!el)return;
+  const days=wkd(S.wk),now=td();
+  const wkN=getWkNum(days[0]);
+  const ap=S.projects.filter(p=>p.missions.some(m=>!m.done)).length;
+  const bl=S.projects.reduce((a,p)=>a+p.missions.filter(m=>m.mstatus==='bloque').length,0);
+  const pr=S.partners.filter(p=>p.nextcontact&&p.nextcontact<=now&&p.pipeline!=='actif').length;
+  const wkPubs=S.publications.filter(p=>{const ds=days[0].toISOString().slice(0,10),de=days[6].toISOString().slice(0,10);return p.date>=ds&&p.date<=de;}).length;
+  const wkHtml=days.map((d,i)=>{
+    const ds=d.toISOString().slice(0,10),isT=ds===now;
+    const ts=S.tasks.filter(t=>taskVisible(t,i,ds,wkN));
+    const pbs=S.publications.filter(p=>p.date===ds);
+    const tot=ts.length+pbs.length;
+    if(!isT&&tot===0)return'';
+    const dn=ts.filter(t=>S.taskStates[t.id+'_'+ds]).length;
+    return`<div class="wkday${isT?' open':''}" id="hwd${i}">
+      <div class="wkday-hd${isT?' today':''}" onclick="g('hwd${i}').classList.toggle('open')">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span class="wkday-name" style="${isT?'color:var(--ac)':''}"> ${DF[i]} <span style="font-size:11px;color:var(--t2);font-weight:400">${fmt(d)}</span></span>
+          ${ts.length>0?`<span style="font-size:11px;font-weight:700;color:${dn===ts.length?'var(--gr)':'var(--t2)'}">${dn}/${ts.length}</span>`:''}
+          ${pbs.length>0?`<span class="badge b-ac">${pbs.length}📣</span>`:''}
+        </div>
+        <span class="wkchev">▶</span>
+      </div>
+      <div class="wkday-body">
+        ${ts.map(t=>{const dk=t.id+'_'+ds,dn2=!!S.taskStates[dk];const tWho=(Array.isArray(t.who)?t.who:[t.who]).map(id=>S.members.find(m=>m.id===id)?.emoji||'').join('');
+return`<div class="trow"><div class="tck${dn2?' done':''}" onclick="togT('${t.id}','${ds}')"></div><div class="ttx${dn2?' done':''}">${t.name}<span style="font-size:11px;color:var(--t2);margin-left:4px">${tWho}</span></div><span class="tcat">${t.cat}</span><button onclick="openEditTask('${t.id}')" style="background:none;border:none;color:var(--t2);font-size:14px;padding:0 4px;cursor:pointer">✏️</button><button onclick="delTask('${t.id}')" style="background:none;border:none;color:var(--rd);font-size:14px;padding:0 2px;cursor:pointer">×</button></div>`;}).join('')}
+        ${pbs.map(p=>{const st=COMST[p.status]||COMST.idee;return`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)"><span>${PKI[p.park||'jungle']}</span><div style="flex:1;font-size:13px;font-weight:500">${p.name}</div><span style="font-size:11px;color:${st.c};font-weight:600">${st.l}</span></div>`;}).join('')}
+        <button class="btn btn-g btn-xs" style="margin-top:8px;width:100%" onclick="openAddTaskDate('${ds}')">+ Tâche</button>
+      </div>
+    </div>`;
+  }).join('');
+  el.innerHTML=`
+    <div style="margin-bottom:16px"><div class="ptitle">Bonjour <span>${S.members.find(x=>x.id===S.cm)?.prenom||''}</span> 👋</div>
+      <div style="font-size:13px;color:var(--t2)">${new Date().toLocaleDateString('fr',{weekday:'long',day:'numeric',month:'long'})}</div>
+    </div>
+    <div class="kgrid">
+      <div class="kpi"><div class="kval" style="color:var(--ac)">${ap}</div><div class="klbl">Projets actifs</div></div>
+      <div class="kpi"><div class="kval" style="color:${bl>0?'var(--rd)':'var(--gr)'}">${bl}</div><div class="klbl">Bloquées</div></div>
+      <div class="kpi"><div class="kval" style="color:var(--am)">${pr}</div><div class="klbl">Relances CRM</div></div>
+      <div class="kpi"><div class="kval" style="color:var(--ac)">${wkPubs}</div><div class="klbl">Pubs sem.</div></div>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div class="slbl" style="margin:0">📅 Semaine</div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-g btn-xs" onclick="S.wk--;renderHome()">‹</button>
+        <span style="font-size:12px;color:var(--t2);align-self:center">${fmt(days[0])} – ${fmt(days[6])}</span>
+        <button class="btn btn-g btn-xs" onclick="S.wk++;renderHome()">›</button>
+      </div>
+    </div>
+    <div class="wkcal">${wkHtml||'<div class="empty">Aucune tâche cette semaine</div>'}</div>`;
+}
+
+// ═══ TASKS ═══
+function renderTasks(){
+  const el=g('page-tasks');if(!el)return;
+  el.innerHTML=`<div class="ph"><div class="ptitle">✅ <span>Tâches</span></div><button class="btn btn-p btn-sm" onclick="openAddTask()">+ Tâche</button></div>
+    <div class="ttabs">
+      <button class="ttab${S.ttab==='semaine'?' act':''}" onclick="S.ttab='semaine';renderTasks()">Semaine</button>
+      <button class="ttab${S.ttab==='liste'?' act':''}" onclick="S.ttab='liste';renderTasks()">Liste</button>
+    </div>
+    <div id="tcontent"></div>`;
+  const c=g('tcontent');
+  if(S.ttab==='semaine') renderSem(c);
+  else renderListeTasks(c);
+}
+function renderSem(c){
+  const days=wkd(S.wk),now=td(),wkN=getWkNum(days[0]);
+  c.innerHTML=`<div class="wnav">
+    <button class="btn btn-g btn-xs" onclick="S.wk--;renderTasks()">‹</button>
+    <span id="tw" class="wlbl">${fmt(days[0])} – ${fmt(days[6])}</span>
+    <button class="btn btn-g btn-xs" onclick="S.wk++;renderTasks()">›</button>
+  </div>
+  <div class="wkcal-tasks">${days.map((d,i)=>{
+    const ds=d.toISOString().slice(0,10),isT=ds===now;
+    const ts=S.tasks.filter(t=>taskVisible(t,i,ds,wkN));
+    const dn=ts.filter(t=>S.taskStates[t.id+'_'+ds]).length;
+    return`<div class="dblock${isT?' open':''}" id="db${i}">
+      <div class="dhd${isT?' today':''}" onclick="g('db${i}').classList.toggle('open')">
+        <div><div class="dtitle" style="${isT?'color:var(--ac)':''}">${DF[i]}</div><div class="dmeta">${fmt(d)} · ${ts.length} tâche${ts.length!==1?'s':''}</div></div>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${ts.length>0?`<span style="font-size:12px;font-weight:700;color:${dn===ts.length?'var(--gr)':'var(--t2)'}">${dn}/${ts.length}</span>`:''}
+          <span class="dchev">▶</span>
+        </div>
+      </div>
+      <div class="dbody">
+        ${ts.length===0?'<div style="color:var(--t2);font-size:13px;padding:8px 0">Aucune tâche</div>':ts.map(t=>{const dk=t.id+'_'+ds,d2=!!S.taskStates[dk];return`<div class="trow"><div class="tck${d2?' done':''}" onclick="togT('${t.id}','${ds}')"></div><div class="ttx${d2?' done':''}">${t.name}${t.note?`<div style="font-size:11px;color:var(--t2)">${t.note}</div>`:''}</div><span class="tcat">${t.cat}</span><button onclick="openEditTask('${t.id}')" style="background:none;border:none;color:var(--t2);font-size:14px;padding:0 4px;cursor:pointer">✏️</button><button onclick="delTask('${t.id}')" style="background:none;border:none;color:var(--rd);font-size:14px;padding:0 2px;cursor:pointer">×</button></div>`;}).join('')}
+        <button class="btn btn-g btn-xs" style="margin-top:8px;width:100%" onclick="openAddTaskDate('${ds}')">+ Tâche ce jour</button>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+function renderListeTasks(c){
+  const all=S.tasks;
+  if(!all.length){c.innerHTML='<div class="empty">Aucune tâche</div>';return;}
+  c.innerHTML=all.map(t=>{
+    const who=Array.isArray(t.who)?t.who.map(id=>S.members.find(m=>m.id===id)?.emoji||'').join(''):(S.members.find(m=>m.id===t.who)?.emoji||'');
+    return`<div class="card" style="margin-bottom:8px;display:flex;align-items:center;gap:10px">
+      <div style="flex:1"><div style="font-size:14px;font-weight:600">${t.name}</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:2px">${who} · ${t.type==='exc'?'📌 '+t.dateExc:'🔄 '+(['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'][parseInt(t.day)]||'?')+' · '+t.freq}</div></div>
+      <button onclick="openEditTask('${t.id}')" style="background:none;border:none;color:var(--t2);font-size:16px;cursor:pointer">✏️</button>
+      <button onclick="delTask('${t.id}')" style="background:none;border:none;color:var(--rd);font-size:16px;cursor:pointer">×</button>
+    </div>`;
+  }).join('');
+}
+
+function togT(id,ds){
+  const k=id+'_'+ds;S.taskStates[k]=!S.taskStates[k];
+  localStorage.setItem('jp_ts',JSON.stringify(S.taskStates));
+  renderHome();renderTasks();
+}
+
+// ═══ TASK MODAL ═══
+function fillWhoButtons(sel){
+  const selected=Array.isArray(sel)?sel:[sel||S.cm];
+  g('t-who').value=JSON.stringify(selected);
+  const el=g('t-who-btns');if(!el)return;
+  el.innerHTML=S.members.map(m=>{
+    const on=selected.includes(m.id);
+    return`<button class="who-btn${on?' on':''}" onclick="togWho('${m.id}')">${m.emoji} ${m.prenom}</button>`;
+  }).join('');
+}
+function togWho(id){
+  let sel=[];try{sel=JSON.parse(g('t-who').value||'[]');}catch(e){sel=[];}
+  if(sel.includes(id)){if(sel.length>1)sel=sel.filter(x=>x!==id);}else sel.push(id);
+  fillWhoButtons(sel);
+}
+function getWho(){try{return JSON.parse(g('t-who').value||'[]');}catch(e){return[S.cm];}}
+function setTaskType(type){
+  g('t-type').value=type;
+  const isRec=type==='rec';
+  g('t-rec-fields').style.display=isRec?'':'none';
+  g('t-exc-fields').style.display=isRec?'none':'';
+  g('t-type-rec').className='btn '+(isRec?'btn-p':'btn-g');
+  g('t-type-exc').className='btn '+(isRec?'btn-g':'btn-p');
+}
+function openAddTask(){
+  g('mt-title').textContent='Nouvelle tâche';g('t-eid').value='';
+  g('t-name').value='';g('t-note').value='';
+  g('t-day').value='0';g('t-freq').value='hebdo';g('t-cat').value='autre';
+  g('t-date-exc').value=td();
+  fillWhoButtons([S.cm]);setTaskType('rec');om('mo-task');
+}
+function openAddTaskDate(ds){
+  openAddTask();setTaskType('exc');g('t-date-exc').value=ds;
+}
+function openEditTask(id){
+  const t=S.tasks.find(x=>x.id===id);if(!t)return;
+  g('mt-title').textContent='Modifier';g('t-eid').value=id;
+  g('t-name').value=t.name;g('t-note').value=t.note||'';
+  g('t-cat').value=t.cat||'autre';
+  const isExc=t.type==='exc';
+  setTaskType(isExc?'exc':'rec');
+  if(isExc){g('t-date-exc').value=t.dateExc||td();}
+  else{g('t-day').value=t.day||'0';g('t-freq').value=t.freq||'hebdo';}
+  fillWhoButtons(t.who);om('mo-task');
+}
+function saveTask(){
+  const name=g('t-name').value.trim();if(!name){toast('⚠️ Titre obligatoire');return;}
+  const eid=g('t-eid').value,type=g('t-type').value;
+  let data;
+  if(type==='exc'){
+    const dateExc=g('t-date-exc').value;if(!dateExc){toast('⚠️ Date obligatoire');return;}
+    data={id:eid||uid(),name,type:'exc',dateExc,who:getWho(),cat:g('t-cat').value,note:g('t-note').value,day:'',freq:'none',weekRef:0};
+  }else{
+    const days0=wkd(0);const wkRef=getWkNum(days0[0]);
+    data={id:eid||uid(),name,type:'rec',who:getWho(),day:g('t-day').value,freq:g('t-freq').value,cat:g('t-cat').value,note:g('t-note').value,weekRef:wkRef};
+  }
+  if(eid){const i=S.tasks.findIndex(x=>x.id===eid);if(i>=0)S.tasks[i]=data;}else S.tasks.push(data);
+  cm('mo-task');renderAll();toast(eid?'Tâche modifiée ✓':'Tâche ajoutée ✓');
+  saveTask_db(data);
+}
+function delTask(id){
+  if(!confirm('Supprimer cette tâche ?'))return;
+  dbDelete('off_taches',id);
+  S.tasks=S.tasks.filter(x=>x.id!==id);
+  renderAll();toast('Tâche supprimée');
+}
+
+// ═══ PROJETS ═══
+let tempM=[];
+function mDone(m){return m.done||m.mstatus==='fait';}
+function renderTasks(){
+  const el=g('page-tasks');if(!el)return;
+  el.innerHTML=`<div class="ph"><div class="ptitle">✅ <span>Tâches</span></div><button class="btn btn-p btn-sm" onclick="openAddTask()">+ Tâche</button></div>
+    <div class="ttabs">
+      <button class="ttab${S.ttab==='semaine'?' act':''}" onclick="S.ttab='semaine';renderTasks()">Semaine</button>
+      <button class="ttab${S.ttab==='projets'?' act':''}" onclick="S.ttab='projets';renderTasks()">Projets</button>
+      <button class="ttab${S.ttab==='liste'?' act':''}" onclick="S.ttab='liste';renderTasks()">Liste</button>
+    </div>
+    <div id="tcontent"></div>`;
+  const c=g('tcontent');
+  if(S.ttab==='semaine')renderSem(c);
+  else if(S.ttab==='projets')renderProjets(c);
+  else renderListeTasks(c);
+}
+function renderProjets(c){
+  const me=S.members.find(x=>x.id===S.cm);
+  c.innerHTML=`<div style="display:flex;justify-content:flex-end;margin-bottom:10px"><button class="btn btn-p btn-sm" onclick="openAddProj()">+ Projet</button></div>`;
+  const pjs=S.projects;
+  if(!pjs.length){c.innerHTML+='<div class="empty">Aucun projet</div>';return;}
+  const order=['critique','haute','normale','basse'];
+  let html='';let lastPrio='';
+  pjs.slice().sort((a,b)=>order.indexOf(a.priority)-order.indexOf(b.priority)).forEach(p=>{
+    const pr=PR[p.priority]||PR.normale;
+    const bl=p.missions.filter(m=>m.mstatus==='bloque').length;
+    const done=p.missions.filter(m=>mDone(m)).length;
+    const total=p.missions.length;
+    const who=S.members.find(x=>x.id===p.who);
+    if(p.priority!==lastPrio){html+=`<div class="prio-sep">${pr.l} ${p.priority}</div>`;lastPrio=p.priority;}
+    html+=`<div class="pcard" id="pc${p.id}" style="border-left-color:${pr.c}">
+      <div class="pchd" onclick="g('pc${p.id}').classList.toggle('open')">
+        <div class="pinf">
+          <div class="pnm">${p.name}</div>
+          <div class="pmeta">${who?who.emoji+' '+who.prenom:''} · ${done}/${total} missions${bl>0?` · <span style="color:var(--rd)">⚠️${bl} bloquée${bl>1?'s':''}</span>`:''}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          ${bl>0?`<span class="badge b-rd">⚠️</span>`:''}
+          <span class="pchev">▶</span>
+        </div>
+      </div>
+      <div class="pbody">
+        ${p.missions.map((m,mi)=>{
+          const isDn=mDone(m),lk=!isDn&&mi>0&&!mDone(p.missions[mi-1]);
+          const isAct=!isDn&&!lk;
+          const st=MST[m.mstatus||'en_cours']||MST.en_cours;
+          const nc=isDn?'mn-done':lk?'mn-lk':'mn-act';
+          const ctc={a_contacter:'#7a7f94',contacte:'#5b7fff',attente:'#fbbf24',negocia:'#a78bfa',accepte:'#34d399',refuse:'#f87171'};
+          return`<div class="miss${isDn?' done-m':lk?' lk-m':' act-m'}" style="${lk?'opacity:.35;pointer-events:none':''}">
+            <div class="miss-top">
+              <div class="mnum ${nc}">${isDn?'✓':lk?'🔒':(mi+1)}</div>
+              <div class="mtx">${m.text}${m.type==='crm'?`<span class="badge b-ac" style="margin-left:6px;font-size:10px">📞${(m.contacts||[]).length}</span>`:''}</div>
+              ${isDn&&m.date?`<span style="font-size:11px;color:var(--t2)">✓ ${m.date}</span>`:''}
+            </div>
+            ${isAct?`<div class="mctrl">
+              <select class="msel" style="background:${st.bg};color:${st.c}" onchange="setMS('${p.id}','${m.id}',this.value)">
+                ${Object.entries(MST).map(([k,v])=>`<option value="${k}"${(m.mstatus||'en_cours')===k?' selected':''}>${v.l}</option>`).join('')}
+              </select>
+              <input class="mdi" type="date" value="${m.targetDate||''}" onchange="setMF('${p.id}','${m.id}','targetDate',this.value)">
+              ${m.mstatus==='bloque'?`<div class="mbl">Besoin: <select onchange="setMF('${p.id}','${m.id}','blocker',this.value)"><option value="">—</option>${S.members.map(x=>`<option value="${x.id}"${m.blocker===x.id?' selected':''}>${x.emoji} ${x.prenom}</option>`).join('')}</select></div>`:''}
+              ${m.type!=='crm'?`<button class="bdone" onclick="compM('${p.id}','${m.id}')">Fait ✓</button>`:''}
+            </div>
+            <div style="padding-left:36px;padding-right:4px;margin-top:6px">
+              <textarea class="mni" placeholder="📝 Note..." onchange="setMF('${p.id}','${m.id}','note',this.value)">${m.note||''}</textarea>
+            </div>
+            ${m.type==='crm'&&(m.contacts||[]).length>0?`<div style="margin-top:6px">${(m.contacts||[]).map((ct,ci)=>{
+              const cts=ct.status||'a_contacter';const pt=S.partners.find(x=>x.id===ct.partnerId);
+              return`<div class="ctrow"><span class="ctnm">${pt?pt.name:ct.name}</span>
+                <select class="ctsel" style="color:${ctc[cts]}" onchange="setCTS('${p.id}','${m.id}',${ci},this.value)">
+                  <option value="a_contacter"${cts==='a_contacter'?' selected':''}>À contacter</option>
+                  <option value="contacte"${cts==='contacte'?' selected':''}>Contacté</option>
+                  <option value="attente"${cts==='attente'?' selected':''}>En attente</option>
+                  <option value="negocia"${cts==='negocia'?' selected':''}>Négo</option>
+                  <option value="accepte"${cts==='accepte'?' selected':''}>Accepté ✅</option>
+                  <option value="refuse"${cts==='refuse'?' selected':''}>Refusé ❌</option>
+                </select></div>`;}).join('')}</div>`:''}`:
+            isDn?`<div style="padding-left:36px;margin-top:4px">
+              <div style="font-size:11px;color:var(--t2)">✓ Terminé le ${m.date}</div>
+              ${m.note?`<div style="font-size:12px;color:var(--t2);font-style:italic;margin-top:3px">📝 ${m.note}</div>`:''}
+              <button onclick="reopenM('${p.id}','${m.id}')" style="margin-top:6px;font-size:11px;padding:4px 10px;background:none;border:1px solid var(--bd);border-radius:8px;color:var(--t2);cursor:pointer;font-family:var(--font)">↩ Rouvrir</button>
+            </div>`:`<div style="padding-left:36px;margin-top:4px">${m.note?`<div style="font-size:12px;color:var(--t2);font-style:italic">📝 ${m.note}</div>`:''}</div>`}
+          </div>`;
+        }).join('')}
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn btn-g btn-sm" onclick="openEditProj('${p.id}')">✏️ Modifier</button>
+          <button class="btn btn-d btn-sm" onclick="delProj('${p.id}')">Supprimer</button>
+        </div>
+      </div>
+    </div>`;
+  });
+  c.innerHTML+=html;
+}
+
+function addM(type){tempM.push({id:uid(),type,text:'',done:false,date:'',contacts:[],mstatus:'en_cours',note:'',targetDate:''});renderME();}
+function renderME(){
+  const el=g('mlist');if(!el)return;
+  el.innerHTML='';
+  tempM.forEach((m,i)=>{
+    const wrap=document.createElement('div');
+    wrap.style.cssText='background:var(--c2);border-radius:var(--r);padding:10px;margin-bottom:6px;border:1px solid var(--bd)';
+    const tag=m.type==='crm'?'📞':'✅';
+    const inp=document.createElement('input');
+    inp.type='text';inp.placeholder=m.type==='crm'?'Mission CRM...':'Mission...';
+    inp.value=m.text;inp.style.cssText='margin-bottom:6px';
+    inp.addEventListener('input',()=>{tempM[i].text=inp.value;});
+    const del=document.createElement('button');
+    del.className='btn btn-d btn-xs';del.textContent='×';del.style.cssText='float:right;margin-bottom:6px';
+    del.addEventListener('click',()=>{tempM.splice(i,1);renderME();});
+    const hd=document.createElement('div');
+    hd.style.cssText='display:flex;align-items:center;gap:6px;margin-bottom:6px';
+    hd.innerHTML=`<span style="font-size:14px">${tag}</span><span style="font-size:11px;color:var(--t2);font-weight:600">${i+1}. ${m.type==='crm'?'CRM':'Simple'}</span>`;
+    wrap.appendChild(del);wrap.appendChild(hd);wrap.appendChild(inp);el.appendChild(wrap);
+  });
+}
+function openAddProj(){
+  g('mp-title').textContent='Nouveau projet';S.projEditId=null;
+  g('p-name').value='';g('p-dl').value='';g('p-bgt').value='';g('p-hrs').value='';
+  g('p-prio').value='normale';g('p-cat').value='demarchage';
+  fillSel2('p-who',S.cm);
+  tempM=[{id:uid(),type:'simple',text:'',done:false,date:'',contacts:[],mstatus:'en_cours',note:'',targetDate:''}];
+  renderME();om('mo-proj');
+}
+function openEditProj(id){
+  const p=S.projects.find(x=>x.id===id);if(!p)return;
+  g('mp-title').textContent='Modifier';S.projEditId=id;
+  g('p-name').value=p.name;g('p-dl').value=p.deadline||'';g('p-bgt').value=p.budget||'';g('p-hrs').value=p.heuresEst||'';
+  g('p-prio').value=p.priority||'normale';g('p-cat').value=p.cat||'autre';
+  fillSel2('p-who',p.who);tempM=JSON.parse(JSON.stringify(p.missions));renderME();om('mo-proj');
+}
+function saveProj(){
+  const name=g('p-name').value.trim();if(!name){toast('⚠️ Nom obligatoire');return;}
+  const data={
+    id:S.projEditId||uid(),name,
+    who:g('p-who').value,cat:g('p-cat').value,
+    priority:g('p-prio').value,deadline:g('p-dl').value||null,
+    budget:parseFloat(g('p-bgt').value)||0,
+    heuresEst:parseFloat(g('p-hrs').value)||0,heuresReal:0,
+    missions:tempM.filter(m=>m.text.trim()),
+    depenses:S.projEditId?(S.projects.find(x=>x.id===S.projEditId)?.depenses||[]):[]
+  };
+  if(S.projEditId){const i=S.projects.findIndex(x=>x.id===S.projEditId);if(i>=0)S.projects[i]=data;}
+  else S.projects.push(data);
+  cm('mo-proj');renderTasks();renderHome();
+  saveProj_db(data).then(ok=>{toast(ok?'✅ Projet sauvegardé':'❌ Erreur sauvegarde');});
+}
+function delProj(id){
+  if(!confirm('Supprimer ce projet ?'))return;
+  dbDelete('off_projets',id);
+  S.projects=S.projects.filter(p=>p.id!==id);
+  renderTasks();renderHome();toast('Projet supprimé');
+}
+function setMS(pid,mid,v){
+  const p=S.projects.find(x=>x.id===pid);if(!p)return;
+  const m=p.missions.find(x=>x.id===mid);if(!m)return;
+  m.mstatus=v;if(v==='fait'){m.done=true;m.date=td();}
+  renderTasks();renderHome();
+  if(v==='bloque')toast('🔴 Mission bloquée');
+  saveProj_db(p);
+}
+function setMF(pid,mid,f,v){
+  const p=S.projects.find(x=>x.id===pid);if(!p)return;
+  const m=p.missions.find(x=>x.id===mid);if(!m)return;
+  m[f]=v;if(f==='blocker')renderTasks();
+  saveProj_db(p);
+}
+function setCTS(pid,mid,ci,v){
+  const p=S.projects.find(x=>x.id===pid);if(!p)return;
+  const m=p.missions.find(x=>x.id===mid);if(!m||!m.contacts)return;
+  m.contacts[ci].status=v;renderTasks();saveProj_db(p);
+}
+function compM(pid,mid){
+  const p=S.projects.find(x=>x.id===pid);if(!p)return;
+  const m=p.missions.find(x=>x.id===mid);if(!m)return;
+  m.done=true;m.date=td();m.mstatus='fait';
+  renderTasks();renderHome();toast('Mission complétée ✓');saveProj_db(p);
+}
+function reopenM(pid,mid){
+  const p=S.projects.find(x=>x.id===pid);if(!p)return;
+  const m=p.missions.find(x=>x.id===mid);if(!m)return;
+  m.done=false;m.date='';m.mstatus='en_cours';
+  renderTasks();renderHome();toast('Mission réouverte');saveProj_db(p);
+}
+
+// ═══ CRM ═══
+function renderCRM(){
+  const el=g('page-crm');if(!el)return;
+  const now=td();
+  const cats=['all','Sou des Écoles','CE / Comité','Club Sportif','Hôtel / Camping','Crèche / IME','Partenariat','Autre'];
+  const catL={'all':'Tous','Sou des Écoles':'🏫','CE / Comité':'🏢','Club Sportif':'⚽','Hôtel / Camping':'🏨','Crèche / IME':'👶','Partenariat':'🤝','Autre':'📌'};
+  let data=S.partners.filter(p=>{
+    if(S.crmFilter==='__late__')return p.nextcontact&&p.nextcontact<=now;
+    if(S.crmFilter!=='all'&&p.cat!==S.crmFilter)return false;
+    if(S.crmSearch){const q=S.crmSearch.toLowerCase();return p.name.toLowerCase().includes(q)||(p.ville||'').toLowerCase().includes(q);}
+    return true;
+  });
+  const pl=PIPE;
+  el.innerHTML=`<div class="ph"><div class="ptitle">🤝 <span>CRM</span></div><button class="btn btn-p btn-sm" onclick="openAddPart()">+ Contact</button></div>
+    <div class="fi"><input type="text" placeholder="🔍 Rechercher..." value="${S.crmSearch||''}" oninput="S.crmSearch=this.value;renderCRM()"></div>
+    <div class="crmflt">
+      <button class="fchip${S.crmFilter==='all'?' act':''}" onclick="S.crmFilter='all';renderCRM()">Tous</button>
+      <button class="fchip${S.crmFilter==='__late__'?' act':''}" onclick="S.crmFilter='__late__';renderCRM()">⚠️ Relances</button>
+      ${cats.slice(1).map(c=>`<button class="fchip${S.crmFilter===c?' act':''}" onclick="S.crmFilter='${c}';renderCRM()">${catL[c]} ${c}</button>`).join('')}
+    </div>
+    ${data.length===0?'<div class="empty">Aucun contact</div>':data.map(p=>{
+      const pip=pl[p.pipeline]||pl.prospect;
+      const late=p.nextcontact&&p.nextcontact<=now&&p.pipeline!=='actif';
+      return`<div class="partcard" onclick="openSheet('${p.id}')" style="${late?'border-color:var(--am)':''}">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div class="pname">${p.name}</div>
+          <span class="badge" style="background:rgba(0,0,0,.2);color:${pip.c}"><span class="pipe-dot" style="background:${pip.c}"></span>${pip.l}</span>
+        </div>
+        <div class="pmeta2">${p.cat||''}${p.ville?' · '+p.ville:''}</div>
+        ${late?`<div style="font-size:11px;color:var(--am);margin-top:4px">⏰ Relance : ${p.nextcontact}</div>`:''}
+      </div>`;
+    }).join('')}`;
+}
+function openSheet(id){
+  const p=S.partners.find(x=>x.id===id);if(!p)return;
+  S.sheetId=id;const now=td();const pl=PIPE[p.pipeline]||PIPE.prospect;
+  g('sh-name').textContent=p.name;
+  g('sh-sub').textContent=`${p.cat||''}${p.ville?' · '+p.ville:''} · ${pl.l}`;
+  const inters=p.interactions||[];
+  const statsTypes=Object.keys(ITYPE).map(k=>{
+    const its=inters.filter(x=>x.type===k).sort((a,b)=>b.date.localeCompare(a.date));
+    return its.length>0?{key:k,data:ITYPE[k],count:its.length,last:its[0].date}:null;
+  }).filter(Boolean);
+  g('sh-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      ${p.contact?`<div class="card"><div style="font-size:10px;color:var(--t2);font-weight:600;text-transform:uppercase;margin-bottom:3px">Contact</div><div style="font-size:14px;font-weight:600">${p.contact}</div></div>`:''}
+      ${p.tel?`<div class="card"><div style="font-size:10px;color:var(--t2);font-weight:600;text-transform:uppercase;margin-bottom:3px">Tél.</div><a href="tel:${p.tel}" style="font-size:14px;font-weight:600;color:var(--ac);text-decoration:none">${p.tel}</a></div>`:''}
+      ${p.email?`<div class="card" style="grid-column:1/-1"><div style="font-size:10px;color:var(--t2);font-weight:600;text-transform:uppercase;margin-bottom:3px">Email</div><a href="mailto:${p.email}" style="font-size:14px;font-weight:600;color:var(--ac);text-decoration:none;word-break:break-all">${p.email}</a></div>`:''}
+    </div>
+    ${p.notes?`<div style="font-size:13px;color:var(--t2);background:var(--c2);padding:12px;border-radius:var(--r);margin-bottom:14px;line-height:1.5">${p.notes}</div>`:''}
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">📊 Historique</div>
+      <button class="btn btn-p btn-xs" onclick="openAddInter('${id}')">+ Interaction</button>
+    </div>
+    ${statsTypes.length>0?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      ${statsTypes.map(s=>`<div style="background:var(--c2);border-radius:var(--r);padding:10px;border:1px solid var(--bd)">
+        <div style="font-size:11px;color:${s.data.c};font-weight:700;margin-bottom:4px">${s.data.l}</div>
+        <div style="font-size:22px;font-weight:800">${s.count}<span style="font-size:12px;color:var(--t2);font-weight:400"> fois</span></div>
+        <div style="font-size:10px;color:var(--t2);margin-top:3px">Dernière : ${s.last}</div>
+      </div>`).join('')}
+    </div>`:'<div style="color:var(--t2);font-size:13px;margin-bottom:12px">Aucune interaction</div>'}
+    ${inters.length>0?`<div style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;margin-bottom:14px">
+      ${inters.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(x=>{const it=ITYPE[x.type]||ITYPE.autre;return`<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--c2);border-radius:var(--r);border:1px solid var(--bd)">
+        <div style="width:8px;height:8px;border-radius:50%;background:${it.c};flex-shrink:0"></div>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600">${it.l}</div>${x.notes?`<div style="font-size:11px;color:var(--t2)">${x.notes}</div>`:''}</div>
+        <div style="font-size:11px;color:var(--t2)">${x.date}</div>
+        <button onclick="delInter('${id}','${x.id}')" style="background:none;border:none;color:var(--rd);cursor:pointer;font-size:15px">×</button>
+      </div>`;}).join('')}
+    </div>`:''}
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-g wf" onclick="openEditPart('${id}')">✏️ Modifier</button>
+      <button class="btn btn-d" onclick="delPart('${id}')">Supprimer</button>
+    </div>`;
+  g('sbg').classList.add('open');setTimeout(()=>g('crmsheet').classList.add('open'),10);
+}
+function closeSheet(){g('crmsheet').classList.remove('open');g('sbg').classList.remove('open');}
+function openAddPart(){
+  g('mpart-t').textContent='Nouveau contact';S.partEditId=null;
+  ['cp-id','cp-name','cp-ville','cp-contact','cp-tel','cp-email','cp-notes'].forEach(id=>g(id).value='');
+  g('cp-cat').value='Sou des Écoles';g('cp-pipe').value='prospect';
+  g('cp-last').value='';g('cp-next').value='';
+  fillSel2('cp-resp',S.cm);om('mo-part');
+}
+function openEditPart(id){
+  const p=S.partners.find(x=>x.id===id);if(!p)return;
+  closeSheet();S.partEditId=id;
+  g('mpart-t').textContent='Modifier contact';
+  g('cp-id').value=id;g('cp-name').value=p.name||'';g('cp-ville').value=p.ville||'';
+  g('cp-contact').value=p.contact||'';g('cp-tel').value=p.tel||'';g('cp-email').value=p.email||'';
+  g('cp-notes').value=p.notes||'';g('cp-cat').value=p.cat||'Sou des Écoles';
+  g('cp-pipe').value=p.pipeline||'prospect';g('cp-last').value=p.lastcontact||'';
+  g('cp-next').value=p.nextcontact||'';fillSel2('cp-resp',p.resp||S.cm);om('mo-part');
+}
+function savePart(){
+  const name=g('cp-name').value.trim();if(!name){toast('⚠️ Nom obligatoire');return;}
+  const data={id:S.partEditId||uid(),name,cat:g('cp-cat').value,ville:g('cp-ville').value,pipeline:g('cp-pipe').value,contact:g('cp-contact').value,tel:g('cp-tel').value,email:g('cp-email').value,notes:g('cp-notes').value,lastcontact:g('cp-last').value||null,nextcontact:g('cp-next').value||null,resp:g('cp-resp').value,crmProjects:[],interactions:S.partEditId?(S.partners.find(x=>x.id===S.partEditId)?.interactions||[]):[]};
+  if(S.partEditId){const i=S.partners.findIndex(x=>x.id===S.partEditId);if(i>=0)S.partners[i]=data;}else S.partners.push(data);
+  cm('mo-part');renderCRM();
+  savePart_db(data).then(ok=>toast(ok?'✅ Contact sauvegardé':'❌ Erreur'));
+}
+function delPart(id){
+  if(!confirm('Supprimer ?'))return;
+  dbDelete('off_partenaires',id);
+  S.partners=S.partners.filter(x=>x.id!==id);
+  closeSheet();renderCRM();toast('Supprimé');
+}
+function openAddInter(pid){
+  g('inter-pid').value=pid;g('inter-type').value='tombola_donnee';
+  g('inter-date').value=td();g('inter-montant').value='';g('inter-notes').value='';
+  om('mo-inter');
+}
+function saveInter(){
+  const date=g('inter-date').value;if(!date){toast('⚠️ Date obligatoire');return;}
+  const pid=g('inter-pid').value,p=S.partners.find(x=>x.id===pid);if(!p)return;
+  if(!p.interactions)p.interactions=[];
+  const data={id:uid(),type:g('inter-type').value,date,montant:g('inter-montant').value,notes:g('inter-notes').value};
+  p.interactions.push(data);if(!p.lastcontact||date>p.lastcontact)p.lastcontact=date;
+  cm('mo-inter');openSheet(pid);
+  savePart_db(p).then(ok=>toast(ok?'✅ Interaction enregistrée':'❌ Erreur'));
+}
+function delInter(pid,iid){
+  if(!confirm('Supprimer ?'))return;
+  const p=S.partners.find(x=>x.id===pid);if(!p)return;
+  p.interactions=(p.interactions||[]).filter(x=>x.id!==iid);
+  openSheet(pid);savePart_db(p);
+}
+
+// ═══ COM ═══
+function renderCom(){
+  const el=g('page-com');if(!el)return;
+  el.innerHTML=`<div class="ph"><div class="ptitle">📣 <span>Com</span></div><button class="btn btn-p btn-sm" onclick="openAddPub()">+ Publication</button></div>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <button class="ttab${S.comView==='semaine'?' act':''}" onclick="S.comView='semaine';renderCom()" style="flex:1">Semaine</button>
+      <button class="ttab${S.comView==='mois'?' act':''}" onclick="S.comView='mois';renderCom()" style="flex:1">Mois</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:12px">
+      <button class="fchip${S.comPark==='all'?' act':''}" onclick="S.comPark='all';renderCom()">Tous</button>
+      <button class="fchip${S.comPark==='jungle'?' act':''}" onclick="S.comPark='jungle';renderCom()">🌿 Jungle</button>
+      <button class="fchip${S.comPark==='sweety'?' act':''}" onclick="S.comPark='sweety';renderCom()">🍭 Sweety</button>
+    </div>
+    <div id="com-obj"></div>
+    <div id="com-ct"></div>`;
+  comRC();
+}
+function comRC(){
+  const obj=g('com-obj'),ct=g('com-ct');if(!obj||!ct)return;
+  if(S.comView==='semaine'){
+    const days=wkd(S.comWk);
+    const ds=days[0].toISOString().slice(0,10),de=days[6].toISOString().slice(0,10);
+    let pubs=S.publications.filter(p=>p.date>=ds&&p.date<=de);
+    if(S.comPark!=='all')pubs=pubs.filter(p=>(p.park||'jungle')===S.comPark||(p.park||'jungle')==='both');
+    obj.innerHTML=comObj(pubs,3,'semaine',days);
+    ct.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <span style="font-size:13px;font-weight:700">${fmt(days[0])} – ${fmt(days[6])}</span>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-g btn-xs" onclick="S.comWk--;renderCom()">‹</button>
+        <button class="btn btn-g btn-xs" onclick="S.comWk++;renderCom()">›</button>
+      </div>
+    </div>
+    <div>${days.map((d,i)=>{
+      const dstr=d.toISOString().slice(0,10),isT=dstr===td();
+      const dp=pubs.filter(p=>p.date===dstr);
+      return`<div class="daycom">
+        <div class="dchead${isT?' today':''}">
+          <span class="dclbl" style="${isT?'color:var(--ac)':''}">${DF[i]} <span style="font-size:11px;color:var(--t2);font-weight:400">${fmt(d)}</span></span>
+          ${dp.length>0?`<span class="badge b-ac">${dp.length}</span>`:''}
+          <button class="btn btn-g btn-xs" onclick="openAddPubDate('${dstr}')">+</button>
+        </div>
+        ${dp.length>0?`<div style="padding:0 14px 10px">${dp.map(p=>pubCard(p)).join('')}</div>`:''}
+      </div>`;
+    }).join('')}</div>`;
+  }
+}
+function comObj(pubs,goal,period){
+  const parks=S.comPark==='all'?['jungle','sweety']:[S.comPark];
+  const rows=parks.map(pk=>{
+    const n=pubs.filter(p=>{const v=p.park||'jungle';return v===pk||v==='both';}).length;
+    const pct=Math.min(100,Math.round(n/goal*100));
+    const col=n>=goal?'var(--gr)':n>=Math.round(goal*.6)?'var(--am)':'var(--rd)';
+    return`<div class="objpk">
+      <div class="objpkhd"><span>${pk==='jungle'?'🌿 Jungle':'🍭 Sweety'}</span><span style="color:${col};font-weight:800">${n}/${goal}</span></div>
+      <div class="prog"><div class="pf" style="width:${pct}%;background:${col}"></div></div>
+    </div>`;
+  }).join('');
+  return`<div class="objcard"><div style="font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px">OBJECTIF ${goal} pubs/parc/${period}</div>${rows}</div>`;
+}
+function pubCard(p){
+  const st=COMST[p.status]||COMST.idee;
+  const plats=(p.platforms||[]).map(pl=>PLI[pl]||'').join('');
+  return`<div class="pubcard">
+    <div class="pubtop">
+      <div class="plats"><span style="font-size:18px">${PKI[p.park||'jungle']||'🌿'}</span>${plats}</div>
+      <div class="pubinf"><div class="pubnm">${p.name}</div><div class="pubmt">${p.resp||''}${p.date?' · '+p.date:''}</div></div>
+      <button class="pubedt" onclick="openEditPub('${p.id}')">✏️</button>
+    </div>
+    <select class="pubsl" style="color:${st.c}" onchange="qPubSt('${p.id}',this.value)">
+      ${Object.entries(COMST).map(([k,v])=>`<option value="${k}"${p.status===k?' selected':''}>${v.l}</option>`).join('')}
+    </select>
+  </div>`;
+}
+function qPubSt(id,v){
+  const p=S.publications.find(x=>x.id===id);if(!p)return;
+  p.status=v;renderCom();savePub_db(p);
+}
+function togPlat(pl){
+  const btn=g('plat-'+pl);if(!btn)return;
+  btn.classList.toggle('on');
+  updatePlatInput();
+}
+function updatePlatInput(){
+  const selected=['fb','ig','tk','gb'].filter(pl=>g('plat-'+pl)&&g('plat-'+pl).classList.contains('on'));
+  g('pub-plats').value=JSON.stringify(selected);
+}
+function resetPlats(){['fb','ig','tk','gb'].forEach(pl=>g('plat-'+pl)&&g('plat-'+pl).classList.remove('on'));g('pub-plats').value='[]';}
+function setPlats(platforms){resetPlats();(platforms||[]).forEach(pl=>{const btn=g('plat-'+pl);if(btn)btn.classList.add('on');});g('pub-plats').value=JSON.stringify(platforms||[]);}
+function openAddPub(ds){
+  g('mpub-t').textContent='Nouvelle publication';S.comEditId=null;
+  g('pub-name').value='';g('pub-date').value=ds||td();
+  g('pub-park').value='jungle';g('pub-st').value='idee';g('pub-desc').value='';
+  resetPlats();fillSel2('pub-resp',S.cm);om('mo-pub');
+}
+function openAddPubDate(ds){openAddPub(ds);}
+function openEditPub(id){
+  const p=S.publications.find(x=>x.id===id);if(!p)return;
+  S.comEditId=id;g('mpub-t').textContent='Modifier';
+  g('pub-name').value=p.name||'';g('pub-date').value=p.date||'';
+  g('pub-park').value=p.park||'jungle';g('pub-st').value=p.status||'idee';
+  g('pub-desc').value=p.desc||'';setPlats(p.platforms||[]);
+  fillSel2('pub-resp',p.resp||S.cm);om('mo-pub');
+}
+function savePub(){
+  const name=g('pub-name').value.trim();if(!name){toast('⚠️ Titre obligatoire');return;}
+  let plats=[];try{plats=JSON.parse(g('pub-plats').value||'[]');}catch(e){}
+  const data={id:S.comEditId||uid(),name,date:g('pub-date').value,park:g('pub-park').value,resp:g('pub-resp').value,status:g('pub-st').value,platforms:plats,desc:g('pub-desc').value,vues:'',likes:'',comments:'',shares:''};
+  if(S.comEditId){const i=S.publications.findIndex(x=>x.id===S.comEditId);if(i>=0)S.publications[i]=data;}else S.publications.push(data);
+  cm('mo-pub');renderCom();renderHome();
+  savePub_db(data).then(ok=>toast(ok?'✅ Publication sauvegardée':'❌ Erreur'));
+}
+
+// ═══ TEAM ═══
+function renderTeam(){
+  const el=g('page-team');if(!el)return;
+  el.innerHTML=`<div class="ptitle">👥 <span>Équipe</span></div>
+    ${S.members.map(m=>{
+      const mp=S.projects.filter(p=>p.who===m.id&&p.missions.some(x=>!mDone(x))).length;
+      const mb=S.projects.filter(p=>p.who===m.id).reduce((a,p)=>a+p.missions.filter(x=>x.mstatus==='bloque').length,0);
+      return`<div class="card" style="display:flex;align-items:center;gap:14px;margin-bottom:10px">
+        <div style="width:48px;height:48px;border-radius:50%;background:var(--c2);display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid ${m.color}">${m.emoji}</div>
+        <div style="flex:1"><div style="font-size:15px;font-weight:700">${m.prenom}</div><div style="font-size:12px;color:var(--t2)">${m.role}</div>
+          <div style="font-size:12px;margin-top:4px">${mp} projet${mp!==1?'s':''} actif${mp!==1?'s':''}</div>
+        </div>
+        ${mb>0?`<span class="badge b-rd">⚠️ ${mb}</span>`:`<span class="badge b-gr">OK</span>`}
+      </div>`;
+    }).join('')}`;
+}
+
+// ═══ UTILS ═══
+function fillSel2(id,sel){
+  const e=g(id);if(!e)return;
+  e.innerHTML=S.members.map(m=>`<option value="${m.id}"${m.id===sel?' selected':''}>${m.emoji} ${m.prenom}</option>`).join('');
+}
+
+// Init
+renderLogin();
+</script>
+</body>
+</html>
